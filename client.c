@@ -37,20 +37,23 @@ int main(int ac, char **av)
 				kill(pid, SIGUSR2);
 			else
 				kill(pid, SIGUSR1);
+			usleep(100);
 			j++;
 		}
 		while (g_ack == 0)
-				pause();
-			usleep(100);
+			pause();
+		usleep(100);
 		i++;
 	}
 	while (j > 0)
 	{
-		kill(pid, SIGUSR1); // 
-		pause();
+		kill(pid, SIGUSR1);
 		usleep(100);
 		j--;
 	}
+	while (g_ack == 0)
+			pause();
+	usleep(100);
 	return 0;
 }
 

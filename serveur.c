@@ -2,14 +2,21 @@
 
 #include <stdio.h>
 
-char *global;
-
 void	handler(int signal, siginfo_t *info, void *context)
 {
 	static int	pos;
 	static char	c;
+	static int	current_pid;
 
 	(void) context;
+	if (current_pid == 0)
+		current_pid = info->si_pid;
+	if (info->si_pid != current_pid)
+	{
+		pos = 0;
+		c = 0;
+		current_pid = info->si_pid;
+	}
 	if (signal == SIGUSR2)
 		c |= 1 << pos;
 	pos++;
