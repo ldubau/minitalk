@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   serveur.c                                          :+:      :+:    :+:   */
+/*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: leondubau <leondubau@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 17:39:45 by leondubau         #+#    #+#             */
-/*   Updated: 2026/03/23 17:43:57 by leondubau        ###   ########.fr       */
+/*   Updated: 2026/03/24 14:16:10 by leondubau        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,14 +47,14 @@ int	main(int ac, char **av)
 
 	if (ac != 1)
 	{
-		write(1, "Error\n", 6);
+		write(2, "Error\n", 6);
 		return (1);
 	}
 	(void)av;
 	action.sa_sigaction = handler;
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = SA_SIGINFO;
-	printf("PID : %d\n", getpid());
+	ft_printf("PID : %d\n", getpid());
 	sigaction(SIGUSR1, &action, NULL);
 	sigaction(SIGUSR2, &action, NULL);
 	while (1)

@@ -6,13 +6,45 @@
 /*   By: leondubau <leondubau@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 17:39:52 by leondubau         #+#    #+#             */
-/*   Updated: 2026/03/23 18:09:53 by leondubau        ###   ########.fr       */
+/*   Updated: 2026/03/24 10:59:44 by leondubau        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-volatile sig_atomic_t	g_ack = 0;
+volatile int	g_ack = 0;
+
+int	error(void)
+{
+	write(1, "Error\n", 6);
+	return (0);
+}
+
+int	ft_atoi(const char *str)
+{
+	int		nbr;
+	int		sign;
+	size_t	i;
+
+	nbr = 0;
+	sign = 1;
+	i = 0;
+	while (str[i] == ' ' || ('\t' <= str[i] && str[i] <= '\r'))
+		i++;
+	if (str[i] == '+')
+		i++;
+	else if (str[i] == '-')
+	{
+		sign *= -1;
+		i++;
+	}
+	while ('0' <= str[i] && str[i] <= '9')
+	{
+		nbr = nbr * 10 + str[i] - '0';
+		i++;
+	}
+	return (nbr * sign);
+}
 
 void	ack_handler(int signal)
 {
@@ -56,11 +88,11 @@ int	main(int ac, char **av)
 	int					j;
 
 	if (ac != 3)
-		return (0);
+		return (error());
 	action.sa_handler = ack_handler;
 	sigemptyset(&action.sa_mask);
 	action.sa_flags = 0;
-	pid = atoi(av[1]);
+	pid = ft_atoi(av[1]);
 	signal = av[2];
 	i = 0;
 	j = 0;

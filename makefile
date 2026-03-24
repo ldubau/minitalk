@@ -1,31 +1,40 @@
 NAME_CLIENT = client
-NAME_SERVEUR = serveur
+NAME_SERVER = server
 
 SRC_CLIENT = client.c
-SRC_SERVEUR = serveur.c
+SRC_SERVER = server.c
 
 OBJ_CLIENT = $(SRC_CLIENT:.c=.o)
-OBJ_SERVEUR = $(SRC_SERVEUR:.c=.o)
+OBJ_SERVER = $(SRC_SERVER:.c=.o)
+
+FT_PRINTF_DIR = ./ft_printf
+FT_PRINTF = $(FT_PRINTF_DIR)/libftprintf.a
 
 CC = cc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -I$(FT_PRINTF_DIR)
 
-all: $(NAME_CLIENT) $(NAME_SERVEUR)
+all: $(NAME_CLIENT) $(NAME_SERVER)
 
-$(NAME_CLIENT): $(OBJ_CLIENT)
-	$(CC) $(CFLAGS) $(OBJ_CLIENT) -o $(NAME_CLIENT)
+$(NAME_CLIENT): $(OBJ_CLIENT) $(FT_PRINTF)
+	$(CC) $(CFLAGS) $(OBJ_CLIENT) $(FT_PRINTF) -o $(NAME_CLIENT)
 
-$(NAME_SERVEUR): $(OBJ_SERVEUR)
-	$(CC) $(CFLAGS) $(OBJ_SERVEUR) -o $(NAME_SERVEUR)
+$(NAME_SERVER): $(OBJ_SERVER) $(FT_PRINTF)
+	$(CC) $(CFLAGS) $(OBJ_SERVER) $(FT_PRINTF) -o $(NAME_SERVER)
+
+$(FT_PRINTF):
+	make -C $(FT_PRINTF_DIR)
 
 %.o: %.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
+
 clean:
-	rm -f $(OBJ_CLIENT) $(OBJ_SERVEUR)
+	rm -f $(OBJ_CLIENT) $(OBJ_SERVER)
+	make -C $(FT_PRINTF_DIR) clean
 
 fclean: clean
-	rm -f $(NAME_CLIENT) $(NAME_SERVEUR)
+	rm -f $(NAME_CLIENT) $(NAME_SERVER)
+	make -C $(FT_PRINTF_DIR) fclean
 
 re: fclean all
 
