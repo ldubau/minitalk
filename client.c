@@ -6,7 +6,7 @@
 /*   By: leondubau <leondubau@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 17:39:52 by leondubau         #+#    #+#             */
-/*   Updated: 2026/03/24 10:59:44 by leondubau        ###   ########.fr       */
+/*   Updated: 2026/03/24 20:53:49 by leondubau        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -72,7 +72,6 @@ void	minitalk(int i, int j, int pid, char *signal)
 			usleep(200);
 			while (g_ack == 0)
 				pause();
-			usleep(200);
 			j++;
 		}
 		i++;
