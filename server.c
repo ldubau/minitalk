@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: leondubau <leondubau@student.42.fr>        +#+  +:+       +#+        */
+/*   By: ldubau <ldubau@student.42.fr>              +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 17:39:45 by leondubau         #+#    #+#             */
-/*   Updated: 2026/03/26 11:55:55 by leondubau        ###   ########.fr       */
+/*   Updated: 2026/03/26 12:19:47 by ldubau           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-char	*g_string;
+char	*g_string = NULL;
 
 char	*ft_realloc(char *g_string, char c)
 {

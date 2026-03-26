@@ -1,3 +1,5 @@
+NAME = $(NAME_CLIENT) $(NAME_SERVER)
+
 NAME_CLIENT = client
 NAME_SERVER = server
 
@@ -10,13 +12,13 @@ OBJ_SERVER = $(SRC_SERVER:.c=.o)
 FT_PRINTF_DIR = ./ft_printf
 FT_PRINTF = $(FT_PRINTF_DIR)/libftprintf.a
 
-LIBFT_DIR = ./libft
+LIBFT_DIR = ./Libft
 LIBFT = $(LIBFT_DIR)/libft.a
 
 CC = cc
 CFLAGS = -Wall -Wextra -Werror -I$(FT_PRINTF_DIR) -I$(LIBFT_DIR) -g
 
-all: $(NAME_CLIENT) $(NAME_SERVER)
+all: $(NAME)
 
 $(NAME_CLIENT): $(OBJ_CLIENT) $(FT_PRINTF) $(LIBFT)
 	$(CC) $(CFLAGS) $(OBJ_CLIENT) $(FT_PRINTF) $(LIBFT) -o $(NAME_CLIENT)
