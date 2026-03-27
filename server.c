@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ldubau <ldubau@student.42.fr>              +#+  +:+       +#+        */
+/*   By: leondubau <leondubau@student.42.fr>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/03/23 17:39:45 by leondubau         #+#    #+#             */
-/*   Updated: 2026/03/26 12:19:47 by ldubau           ###   ########.fr       */
+/*   Updated: 2026/03/27 10:16:01 by leondubau        ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minitalk.h"
 
-char	*g_string = NULL;
+char	*g_string;
 
 char	*ft_realloc(char *g_string, char c)
 {
@@ -23,11 +23,15 @@ char	*ft_realloc(char *g_string, char c)
 	if (!g_string)
 	{
 		g_string = malloc(sizeof(char));
+		if (!g_string)
+			return (0);
 		g_string[0] = '\0';
 	}
 	while (g_string[i])
 		i++;
 	new_string = malloc(sizeof(char) * ft_strlen(g_string) + 2);
+	if (!new_string)
+		return (0);
 	ft_strlcpy(new_string, g_string, ft_strlen(g_string) + 1);
 	free(g_string);
 	new_string[i] = c;
@@ -35,12 +39,24 @@ char	*ft_realloc(char *g_string, char c)
 	return (new_string);
 }
 
-int	end_string()
+int	end_string(void)
 {
 	ft_printf("%s\n", g_string);
 	free(g_string);
 	g_string = NULL;
 	return (0);
+}
+
+void	init_pid(siginfo_t *info, int *current_pid, int *pos, char *c)
+{
+	if (*current_pid == 0)
+		*current_pid = info->si_pid;
+	if (info->si_pid != *current_pid)
+	{
+		*pos = 0;
+		*c = 0;
+		*current_pid = info->si_pid;
+	}
 }
 
 void	handler(int signal, siginfo_t *info, void *context)
@@ -50,20 +66,15 @@ void	handler(int signal, siginfo_t *info, void *context)
 	static int	current_pid;
 
 	(void) context;
-	if (current_pid == 0)
-		current_pid = info->si_pid;
-	if (info->si_pid != current_pid)
-	{
-		pos = 0;
-		c = 0;
-		current_pid = info->si_pid;
-	}
+	init_pid(info, &current_pid, &pos, &c);
 	if (signal == SIGUSR2)
 		c |= 1 << pos;
 	pos++;
 	if (pos == 8 && c)
 	{
 		g_string = ft_realloc(g_string, c);
+		if (!g_string)
+			return ;
 		pos = 0;
 		c = 0;
 	}
@@ -83,8 +94,10 @@ int	main(int ac, char **av)
 	}
 	(void)av;
 	action.sa_sigaction = handler;
-	sigemptyset(&action.sa_mask);
 	action.sa_flags = SA_SIGINFO;
+	sigemptyset(&action.sa_mask);
+	sigaddset(&action.sa_mask, SIGUSR1);
+	sigaddset(&action.sa_mask, SIGUSR2);
 	ft_printf("PID : %d\n", getpid());
 	sigaction(SIGUSR1, &action, NULL);
 	sigaction(SIGUSR2, &action, NULL);
@@ -92,14 +105,3 @@ int	main(int ac, char **av)
 		pause();
 	return (0);
 }
-
-
-// if (pos == 8)
-// 	{
-// 		if (!c)
-// 			end_string();
-// 		else
-// 			g_string = ft_realloc(g_string, c);
-// 		pos = 0;
-// 		c = 0;
-// 	}
